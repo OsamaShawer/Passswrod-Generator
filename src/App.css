@@ -20,8 +20,8 @@ body {
 }
 
 .page {
+  height: 100%;
   background-color: rgb(230 230 230);
-  height: 100vh
 }
 .page .container {
   display: flex;
