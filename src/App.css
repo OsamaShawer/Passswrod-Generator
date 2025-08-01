@@ -1,0 +1,160 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+  width: 800px;
+  margin: 0 auto;
+}
+
+.center {
+  text-align: center;
+  font-weight: bold;
+  padding: 20px 0;
+}
+
+.page {
+  background-color: rgb(230 230 230);
+  height: 100vh
+}
+.page .container {
+  display: flex;
+  flex-direction: column;
+}
+
+.page .form {
+  display: flex;
+}
+.page .form div p {
+  font-size: 20px
+}
+.page .form div {
+  /* text-align: center; */
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  background-color: white;
+  padding: 10px;
+  width: 33%;
+  margin: 20px 0 5px 2px
+}
+.page .form .is-number .true-number {
+  border: 2px solid black;
+  height: 40px;
+  width: 40px;
+  cursor: pointer;
+}
+.page .form .is-number .true-number:hover {
+  /* background-color: rgb(218, 0, 0); */
+  background-color: rgb(235 235 235);
+}
+
+.true-special  {
+  border: 2px solid black;
+  height: 40px;
+  min-width: 40px;
+  max-width: 40px;
+  cursor: pointer;
+}
+
+.generate-button {
+  background-color: rgb(186, 91, 91);
+  padding: 10px 0;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  
+}
+
+.appear {
+  background-color: white;
+  text-align: center;
+  padding: 15px 0;
+  margin-top: 10px;
+  border-radius: 4px;
+  border: 3px dashed rgb(186, 91, 91);
+  font-size: 20px;
+}
+
+.last {
+  background-color: rgb(210 210 210);
+  padding: 15px 0;
+  margin-top: 10px;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+.here {
+  background-color: white;
+  padding: 15px 5px;
+  margin-top: 10px;
+}
+
+.passwords-parent {
+  background-color: white;
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 4px;
+  /* counter-reset: number; */
+}
+.passwords {
+  border-bottom: 1px solid rgb(220 220 220);
+  padding: 10px;
+  position: relative;
+  counter-increment: number;
+  transform: translateX(20px);
+  margin-top: 10px;
+}
+
+.passwords-parent .passwords::before {
+  content: counter(number);
+  position: absolute;
+  top: 6px;
+  left: -35px;
+  transform: translateX(10px);
+  background-color: rgb(255, 112, 112);
+  color: white;
+  border-radius: 50%;
+  padding: 5px 10px;
+}
+
+@media (max-width: 950px) {
+  .page .form {
+    display: flex;
+    flex-direction: column;
+  }
+  .page .form div {
+    width: 100%;
+    /* max-width: 100%; */
+  }
+}
+
+@media (max-width: 840px) {
+  .page {
+    width: fit-content;
+    padding: 20px;
+    display: flex;
+    height: 100%;
+    /* justify-content: center; */
+    /* align-items: center; */
+    margin: 0 auto
+  }
+  .here {
+    display: none;
+  }
+  .container {
+    width: 100%;
+    
+  }
+  .appear {
+    font-size: 17px
+  }
+}
