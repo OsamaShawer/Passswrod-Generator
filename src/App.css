@@ -126,6 +126,11 @@ body {
   padding: 5px 10px;
 }
 
+.parent-signin {
+  position: absolute;
+
+}
+
 @media (max-width: 950px) {
   .page .form {
     display: flex;
@@ -135,6 +140,53 @@ body {
     width: 100%;
     /* max-width: 100%; */
   }
+}
+.email {
+  position: relative;
+}
+
+.email-icon {
+  transform: translate(-27px, 45px);
+  font-size: 20px;
+}
+
+.email-icon2 {
+  transform: translate(-27px, 38px);
+  font-size: 20px;
+}
+
+.texts-other {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.text-other {
+  text-decoration: none;
+  color: black;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.text-other:hover {
+  color: red;
+  font-weight: bold;
+}
+
+.text-sign { 
+  text-align: center;
+  /* padding-bottom: 50px  */
+}
+.validation-parent {
+  color: red;
+  display: flex;
+  margin-top: 2px;
+  display: none;
+}
+.form-sign {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 @media (max-width: 840px) {
