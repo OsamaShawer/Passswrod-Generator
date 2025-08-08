@@ -1,11 +1,11 @@
 import { Button, Paper, TextField } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faKey, faUser, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect, type ChangeEvent } from "react";
+import { useState, type ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import postingData from "./API/connection";
+// import postingData from "./API/connection";
 function RegisterComponent() {
-
+  let transfer = useNavigate();
   // let info = {username: "", email: "", password: ""};
   // let data = ;
   // useEffect(() => postingData, []);
@@ -16,12 +16,11 @@ function RegisterComponent() {
   let [visibilityPassword, setVisibilityPassword] = useState(false);
   let [visibilityConfirmPassword, setVisibilityConfirmPassword] = useState(false);
   let [userInfo, setUserInfo] = useState({username: "", email: "", password: "", confirmPassword: ""});
-  let transfer = useNavigate();
   let emailValidator = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
   function change(e: ChangeEvent<HTMLInputElement>) {
     setUserInfo({...userInfo, [e.target.name]: e.target.value});
   }
-  async function handleSubmit(e: ChangeEvent<HTMLInputElement>) {
+  async function handleSubmit(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     setVisibilityEmail(false);
     setVisibilityUserName(false);
@@ -57,11 +56,10 @@ function RegisterComponent() {
     } else if (response.status === 409 && result.message === "Email is registered") {
       setVisibilityEmailRegister(true);
       return;
-    } else {
+    }
       // postingData(userInfo);
       setUserInfo({username: "", email: "", password: "", confirmPassword: ""});
       transfer("/register/code");
-    }
   }
       // const data = await postingData(userInfo);
       // setUserInfo([...userInfo, data]);
