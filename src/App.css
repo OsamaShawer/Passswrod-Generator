@@ -148,6 +148,7 @@ body {
 .email-icon {
   transform: translate(-27px, 45px);
   font-size: 20px;
+  /* font-weight: bold; */
 }
 
 .email-icon2 {
@@ -182,6 +183,7 @@ body {
   display: flex;
   margin-top: 2px;
   display: none;
+  font-weight: bold;
 }
 .form-sign {
   display: flex;

@@ -1,6 +1,6 @@
 import { Button, Paper, TextField } from "@mui/material";
 // import { result } from "./backend/src/index"
-import { useState, type ChangeEvent } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./App.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,8 +10,6 @@ function SendCode() {
   let [visibilityFailed, setVisibilityFailed] = useState(false);
   let [code, setCode] = useState({code: ""});
   let [] = useState({code: "", email: ""})
-  let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-  let result = "";
   
   // let randomNumber = ;
 

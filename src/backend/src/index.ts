@@ -1,5 +1,6 @@
-import express from "express";
+import express, { RequestHandler } from "express";
 import cors from "cors";
+import { body, validationResult } from "express-validator";
 import informationModel from "./database/models";
 import mongoose, { Model } from "mongoose";
 import nodemailer from "nodemailer";
@@ -68,28 +69,42 @@ app.get("/register", async (req, res) => {
   res.send(data);
 });
 let information = { username: "", email: "", password: "", confirmPassword: "" };
-app.post("/register", async (req, res) => {
-  console.log(req.body);
-  const { username, email, password, confirmPassword } = req.body;
-  information = {username: username, email: email, password: password, confirmPassword: confirmPassword};
-
-  try {
-    const emailExists = await informationModel.findOne({ email });
-    if (emailExists) {
-      res.status(409).json({ message: "Email is registered" });
-      return;
+app.post("/register",
+  [
+  body("password").isLength({ min: 8, max: 32 }),
+  body("email").isLength({ max: 50 }).isEmail()
+  ],
+  (async (req, res) => {
+    const errors = validationResult(req);
+    // console.log(req.body);
+    if (!errors.isEmpty()) {
+      console.log("Validation failed", errors.array());
+      return res.status(400).json({ errors: errors.array() });
     }
-    const usernameExists = await informationModel.findOne({ username });
-    if (usernameExists) {
-      res.status(409).json({ message: "Username is taken" });
-      return;
-    }
-    await send(email, username, result);
-    console.log("SENT");
-    res.status(200).json({ message: "Registered" })
 
-  } catch (err) { console.log(err); }
-});
+    const { username, email, password, confirmPassword } = req.body;
+    information = {username: username, email: email, password: password, confirmPassword: confirmPassword};
+
+    try {
+      const emailExists = await informationModel.findOne({ email });
+      if (emailExists) {
+        res.status(409).json({ message: "Email is registered" });
+        return;
+      }
+      const usernameExists = await informationModel.findOne({ username });
+      if (usernameExists) {
+        res.status(409).json({ message: "Username is taken" });
+        return;
+      }
+      if (password !== confirmPassword) {
+        res.status(400).json({ message: "Invalid Confirmation" });
+        return;
+      }
+      await send(email, username, result);
+      console.log("SENT");
+      res.status(200).json({ message: "Registered" })
+    } catch (err) { console.log(err); return res.status(400).json({ message: "a" }) }
+}) as RequestHandler) ;
 app.get("/register/code", (req, res) => {res.send("Hello");});
 app.post('/register/code', async (req, res) => {
   const value = req.body;
@@ -97,10 +112,94 @@ app.post('/register/code', async (req, res) => {
   if (req.body.code == result) {
     // console.log(value);
     const creation = await informationModel.create(information);
-
     res.status(200).json({ message: "Registered" });
   } else if (req.body.code != result) {
-    res.status(404).json({ message: "Wrong code" })
+    res.status(404).json({ message: "Wrong code" });
   }
-})
+});
+app.post("/", async (req, res)  => {
+  try {
+    const { email, password } = req.body;
+    const registered = await informationModel.findOne({ email });
+    console.log(registered);
+    if (registered) {
+      if (registered.password === password) {
+        res.status(200).json({ message: "Signed" });
+        return;
+      } else {
+        res.status(404).json({ message: "Wrong Password" });
+        return;
+      }
+    } else {
+      res.status(404).json({ message: "Email Not Registered" });
+      return;
+    }
+  } catch (error) {
+    console.log("Error " + error);
+    res.status(500).json({ message: "BAD" });
+  }
+});
+let emailReset = "";
+let codeResst = "";
+for (let i = 0; i <= 5; i++) {
+  codeResst += (numbers[Math.floor(Math.random() * 10)]).toString();
+}
+let resetEmail = "";
+app.post("/reset", async (req, res) => {
+  resetEmail = req.body.email;
+  console.log(resetEmail);
+  try {
+    const reset = await informationModel.findOne({ email: resetEmail });
+    if (reset) {
+      await send(resetEmail, reset.username, codeResst);
+      res.status(200).json({ message: "Found" });
+      return;
+    } else {
+      res.status(404).json({ message: "Not Found" });
+      return;
+    }
+  } catch (error) {
+    console.log("Failed This Is The Error " + error);
+    res.status(500).json({ message: "BAD" });
+  }
+});
+app.post("/reset/code", async (req, res) => {
+  try {
+    const { code } = req.body;
+    if (code == +codeResst) {
+      res.status(200).json({ message: "Right Code" });
+      return;
+    } else {
+      res.status(400).json({ message: "Wrong Code" });
+      return;
+    }
+  } catch (error) {
+    console.log("Failed " + error);
+    res.status(500).json({ message: "BAD"});
+  }
+});
+interface user {
+  username: string,
+  email: string,
+  password: string,
+  confirmPassword: string
+}
+app.post("/reset/password", async (req, res) => {
+  const { newPassword, confirmPassword } = req.body;
+  console.log("Reset email:", resetEmail);
+  const user = await informationModel.findOne({ email: resetEmail });
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+  if (newPassword !== confirmPassword) {
+    return res.status(400).json({ message: "Passwords do not match" });
+  }
+  if (newPassword.length < 8) {
+    return res.status(400).json({ message: "Password too short" });
+  }
+  user.password = newPassword;
+  await user.save();
+  res.status(200).json({ message: "Changed" });
+});
+
 app.listen(port, () => console.log("Working ...on port " + port));
